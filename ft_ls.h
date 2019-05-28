@@ -6,7 +6,7 @@
 /*   By: fmasha-h <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/27 08:50:15 by fmasha-h          #+#    #+#             */
-/*   Updated: 2019/05/27 17:08:17 by fmasha-h         ###   ########.fr       */
+/*   Updated: 2019/05/28 21:22:51 by fmasha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,7 @@
 # include <sys/stat.h>
 # include <dirent.h>
 # include <stdlib.h>
-# include "libft/libft.h"
-# include <stdio.h> //!!!!!!!!!!!!!!!!!!!!!!
-# define CHECK_BIT(var, position) (var &(1 << position)) ? 1 : 0
-# define PUT_BIT(var, position) (var |= (1 << position))
-# define DEL_BIT(var, position) (var &= ~(1 << position))
+# include "ft_printf/MainHeader/ft_printf.h"
 
 typedef struct	s_ls
 {

@@ -6,11 +6,13 @@
 /*   By: fmasha-h <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 16:58:29 by fmasha-h          #+#    #+#             */
-/*   Updated: 2019/05/27 17:49:18 by fmasha-h         ###   ########.fr       */
+/*   Updated: 2019/05/28 21:19:30 by fmasha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "../ft_ls.h"
+
+
 
 t_ls		*read_dir(char *path)
 {
@@ -39,7 +41,7 @@ t_ls		*read_dir(char *path)
 	head = head->next;
 	while (head != NULL)
 	{
-		printf("%d %s\n",head->file_type, head->file_name);
+		ft_printf("%d %s\n",head->file_type, head->file_name);
 		head = head->next;
 	}
 	return (head);
