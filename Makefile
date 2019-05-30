@@ -39,7 +39,7 @@ $(NAME): $(DIR_O) $(OBJF)
 	@make -C ft_printf
 	gcc $(FLAGS) $(OBJF) $(PRINTF_LIB) -o $(NAME)
 
-$(DIR_O)/%.o: %.c $(PR)
+$(DIR_O)/%.o: %.c
 	gcc $(FLAGS) $(LS_HEAD) $(PRINTF_HEAD) -o $@ -c $<
 
 clean:

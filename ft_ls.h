@@ -22,16 +22,19 @@
 typedef struct	s_ls
 {
 	char		*file_name;
-	itn			name_length;
-	char		file_type;
+	int			name_length;
 	char		*path;
+	int			path_length;
+	char		*full_path;
+	char		file_type;
 	struct s_ls	*next;
 }				t_ls;
 
 short			g_flags;
 unsigned long	g_list_size;
 t_ls			*create_elem(struct dirent *pDir, char *path);
-void			add_node_to_end(t_ls *head, t_ls *node);
+void			add_node_defolt(t_ls *head, t_ls *node);
 int				add_flags(char *argv);
-
+t_ls			*read_dir(char *path, t_ls *head);
+void			create_list(char *path);
 #endif

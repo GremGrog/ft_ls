@@ -12,37 +12,58 @@
 
 #include "../ft_ls.h"
 
-t_ls		*read_dir(char *path)
+t_ls		*read_dir(char *path, t_ls *head)
 {
 	DIR				*ptr;
-	struct dirent	*pDir;
+	struct dirent	*p_dir;
 	t_ls			*g;
-	t_ls			*head;
-	char			*dir_name;
 
-	pDir = NULL;
-	g = create_elem(pDir, "0");
-	head = g;
 	ptr = opendir(path);
 	if (ptr == NULL)
 		return (NULL);
-	dir_name = malloc(sizeof(char) * ft_strlen(path) + 1);
-	ft_strcpy(dir_name, path);
-	while ((pDir = readdir(ptr)) != NULL)
+	while ((p_dir = readdir(ptr)) != NULL)
 	{
-		g = create_elem(pDir, path);
-		add_node_to_end(head, g);
+		g = create_elem(p_dir, path);
+		add_node_defolt(head, g);
 		g = g->next;
 		g_list_size++;
 	}
 	closedir (ptr);
-	head = head->next;
-	while (head != NULL)
-	{
-		ft_printf("%s %s\n",head->path, head->file_name);
-		head = head->next;
-	}
 	return (head);
+}
+
+void		output(t_ls *head)
+{
+	t_ls	*temp;
+
+	if (!head)
+		return ;
+	temp = head;
+	while (temp != NULL)
+	{
+		if (!CHECK_BIT(g_flags, 0))
+		{
+			while (temp && temp->file_name[0] == '.')
+				temp = temp->next;
+			if (temp == NULL)
+				break ;
+		}
+		ft_printf("%s\n",temp->file_name);
+		temp = temp->next;
+	}
+}
+
+void		create_list(char *path)
+{
+	t_ls			*head;
+	int				i;
+
+	i = 0;
+	head = create_elem(NULL, NULL);
+	if ((head = read_dir(path, head)) == NULL)
+		return ;
+	head = head->next;
+	output(head);
 }
 
 void		ft_ls(char **argv, int argc)
@@ -58,9 +79,9 @@ void		ft_ls(char **argv, int argc)
 			return ;
 		}
 		if (f == -1)
-			read_dir(argv[1]);
+			create_list(argv[1]);
 		if (f == 1)
-			read_dir(".");
+			create_list(".");
 	}
 }
 
@@ -69,7 +90,7 @@ int	main(int argc, char **argv)
 	g_list_size = 0;
 	g_flags = 0;
 	if (argc == 1)
-		read_dir(".");
-	if (argc == 2 || argc == 3)
+		create_list(".");
+	else
 		ft_ls(argv, argc);
 }

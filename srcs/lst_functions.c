@@ -11,27 +11,47 @@
 /* ************************************************************************** */
 
 #include "../ft_ls.h"
-
+# include <string.h>
 t_ls		*get_path(t_ls *node, char *path)
 {
 	char	*buf;
 
-	
+	if (path[0] == '.' && path[1] == '\0')
+	{
+		buf = (char*)malloc(sizeof(char) * (3 + node->name_length));
+		buf = ft_strcpy(buf, "./");
+		node->path_length = 2;
+	}
+	else
+	{
+		node->path_length = ft_strlen(path);
+		buf = (char*)malloc(sizeof(char) * node->path_length + 1);
+		buf = ft_strcpy(buf, path);
+		buf = ft_strjoin(buf, "/");
+		node->path_length += 1;
+	}
+	node->path = (char*)malloc(sizeof(char) * node->path_length + 1);
+	node->path = ft_strcpy(node->path, buf);
+	node->full_path = (char*)malloc(sizeof(char) *
+		(node->path_length + node->name_length) + 1);
+	node->full_path = ft_strjoin(node->path, node->file_name);
+	free(buf);
+	return (node);
 }
 
-t_ls		*create_elem(struct dirent *pDir, char *path)
+t_ls		*create_elem(struct dirent *p_dir, char *path)
 {
 	t_ls	*node;
 
 	node = (t_ls*)malloc(sizeof(t_ls));
 	node->file_type = 0;
-	if (pDir)
+	if (p_dir)
 	{
-		node->name_length = ft_strlen(pDir->d_name);
+		node->name_length = ft_strlen(p_dir->d_name);
 		if (!(node->file_name = malloc(sizeof(char) * node->name_length + 1)))
-				return (NULL);
-		ft_strcpy(node->file_name, pDir->d_name);
-		node->file_type = pDir->d_type;
+			return (NULL);
+		ft_strcpy(node->file_name, p_dir->d_name);
+		node->file_type = p_dir->d_type;
 		get_path(node, path);
 	}
 	else
@@ -40,10 +60,40 @@ t_ls		*create_elem(struct dirent *pDir, char *path)
 	return (node);
 }
 
-void		add_node_to_end(t_ls *head, t_ls *node)
+void		add_node_reverse(t_ls *head, t_ls *node)
 {
 	while (head->next != NULL)
+	{
+		if (head->next->file_name != NULL &&
+			ft_strcmp(head->next->file_name, node->file_name) < 0)
+		{
+			node->next = head->next;
+			head->next = node;
+			return ;
+		}
 		head = head->next;
+	}
+	head->next = node;
+	node->next = NULL;
+}
+
+void		add_node_defolt(t_ls *head, t_ls *node)
+{
+	if (CHECK_BIT(g_flags, 1) == 1)
+	{
+		return (add_node_reverse(head, node));
+	}
+	while (head->next != NULL)
+	{
+		if (head->next->file_name != NULL &&
+			ft_strcmp(head->next->file_name, node->file_name) > 0)
+		{
+			node->next = head->next;
+			head->next = node;
+			return ;
+		}
+		head = head->next;
+	}
 	head->next = node;
 	node->next = NULL;
 }
