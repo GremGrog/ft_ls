@@ -12,7 +12,14 @@
 
 #include "../ft_ls.h"
 
-t_ls		*create_elem(struct dirent *pDir)
+t_ls		*get_path(t_ls *node, char *path)
+{
+	char	*buf;
+
+	
+}
+
+t_ls		*create_elem(struct dirent *pDir, char *path)
 {
 	t_ls	*node;
 
@@ -20,10 +27,12 @@ t_ls		*create_elem(struct dirent *pDir)
 	node->file_type = 0;
 	if (pDir)
 	{
-		if (!(node->file_name = malloc(sizeof(char) * ft_strlen(pDir->d_name) + 1)))
+		node->name_length = ft_strlen(pDir->d_name);
+		if (!(node->file_name = malloc(sizeof(char) * node->name_length + 1)))
 				return (NULL);
 		ft_strcpy(node->file_name, pDir->d_name);
 		node->file_type = pDir->d_type;
+		get_path(node, path);
 	}
 	else
 		node->file_name = NULL;

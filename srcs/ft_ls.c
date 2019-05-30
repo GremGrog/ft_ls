@@ -21,7 +21,7 @@ t_ls		*read_dir(char *path)
 	char			*dir_name;
 
 	pDir = NULL;
-	g = create_elem(pDir);
+	g = create_elem(pDir, "0");
 	head = g;
 	ptr = opendir(path);
 	if (ptr == NULL)
@@ -30,7 +30,7 @@ t_ls		*read_dir(char *path)
 	ft_strcpy(dir_name, path);
 	while ((pDir = readdir(ptr)) != NULL)
 	{
-		g = create_elem(pDir);
+		g = create_elem(pDir, path);
 		add_node_to_end(head, g);
 		g = g->next;
 		g_list_size++;
@@ -39,7 +39,7 @@ t_ls		*read_dir(char *path)
 	head = head->next;
 	while (head != NULL)
 	{
-		ft_printf("%d %s\n",head->file_type, head->file_name);
+		ft_printf("%s %s\n",head->path, head->file_name);
 		head = head->next;
 	}
 	return (head);
@@ -48,7 +48,7 @@ t_ls		*read_dir(char *path)
 void		ft_ls(char **argv, int argc)
 {
 	int		f;
-	
+
 	if (argc > 1)
 	{
 		f = add_flags(argv[1]);

@@ -35,10 +35,8 @@ $(DIR_O):
 	@mkdir -p obj
 	@mkdir -p obj/srcs
 
-$(PRINTF_LIB):
-	@make -C ft_printf
-
 $(NAME): $(DIR_O) $(OBJF)
+	@make -C ft_printf
 	gcc $(FLAGS) $(OBJF) $(PRINTF_LIB) -o $(NAME)
 
 $(DIR_O)/%.o: %.c $(PR)
