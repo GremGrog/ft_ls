@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   add_flags.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmasha-h <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fmasha-h <fmasha-h@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/27 11:02:19 by fmasha-h          #+#    #+#             */
 /*   Updated: 2019/05/27 11:40:36 by fmasha-h         ###   ########.fr       */

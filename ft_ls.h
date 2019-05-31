@@ -21,12 +21,12 @@
 
 typedef struct	s_ls
 {
-	char		*file_name;
-	int			name_length;
-	char		*path;
-	int			path_length;
-	char		*full_path;
-	char		file_type;
+	char			*file_name;
+	int				name_length;
+	char			*path;
+	int				path_length;
+	char			*full_path;
+	unsigned char	file_type;
 	struct s_ls	*next;
 }				t_ls;
 
@@ -36,5 +36,7 @@ t_ls			*create_elem(struct dirent *pDir, char *path);
 void			add_node_defolt(t_ls *head, t_ls *node);
 int				add_flags(char *argv);
 t_ls			*read_dir(char *path, t_ls *head);
-void			create_list(char *path);
+t_ls			*create_list(char *path);
+void			recursive_output(t_ls *head);
+void			output(t_ls *head);
 #endif
