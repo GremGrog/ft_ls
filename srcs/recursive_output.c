@@ -12,31 +12,46 @@
 
 #include "../ft_ls.h"
 
-void	recursive_output(t_ls *head)
+t_ls	*recursive_loop(t_ls *temp)
 {
-	t_ls	*temp;
 	t_ls	*buf;
 
-	ft_printf("\n");
-	if (head->file_name == NULL || head->file_type == 'f' )
-		return ;
-	temp = head;
-	while (temp->next)
+	while (temp != NULL)
 	{
 		if (temp->file_type == 'd')
 		{
-			ft_printf("TP%s:\n", temp->full_path);
-			buf = create_list(temp->full_path);
-			temp = temp->next;
-			if (buf->next != NULL)
-				buf = buf->next;
-			if (buf->file_type == 'd')
-				ft_printf("BF%s:\n", buf->full_path);
-			buf = create_list(buf->full_path);
-			if (temp->file_name == NULL || temp->file_type == 'f')
-				return ;
+			if ((temp->file_name[0] == '.' && temp->file_name[1] == '.') ||
+				(temp->file_name[0] == '.' && temp->name_length == 1))
+			{
+				buf = temp;
+				temp = temp->next;
+				delete_elem(buf);
+			}
+			else
+			{
+				ft_printf("FP%s:\n", temp->full_path);
+				recursive_output(temp->full_path);
+			}
 		}
-		else
-			temp = temp->next;
+		buf = temp;
+		temp = temp->next;
+		delete_elem(buf);
 	}
+	return (temp);
+}
+
+void	recursive_output(char *path)
+{
+	t_ls	*head;
+	t_ls	*temp;
+
+	head = create_elem(NULL, NULL);
+	read_dir(path, head);
+	temp = head->next;
+	if (temp->file_name != NULL)
+		output(temp);
+	ft_printf("\n");
+	temp = recursive_loop(temp);
+	remove_list(temp);
+	free(head);
 }

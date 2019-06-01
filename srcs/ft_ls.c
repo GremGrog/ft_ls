@@ -12,15 +12,14 @@
 
 #include "../ft_ls.h"
 
-t_ls		*read_dir(char *path, t_ls *head)
+void		read_dir(char *path, t_ls *head)
 {
 	DIR				*ptr;
 	struct dirent	*p_dir;
-	t_ls			*g;
 
 	ptr = opendir(path);
 	if (ptr == NULL)
-		return (NULL);
+		return ;
 	while ((p_dir = readdir(ptr)) != NULL)
 	{
 		if (!CHECK_BIT(g_flags, 0))
@@ -28,14 +27,10 @@ t_ls		*read_dir(char *path, t_ls *head)
 			while (p_dir != NULL && p_dir->d_name[0] == '.')
 				p_dir = readdir(ptr);
 		}
-		if ((g = create_elem(p_dir, path)) == NULL)
-			break ;
-		add_node_defolt(head, g);
-		g = g->next;
+		add_node_defolt(head, create_elem(p_dir, path));
 		g_list_size++;
 	}
 	closedir (ptr);
-	return (head);
 }
 
 void		output(t_ls *head)
@@ -47,32 +42,31 @@ void		output(t_ls *head)
 	temp = head;
 	while (temp != NULL)
 	{
-		ft_printf("%s\n",temp->file_name);
+		// ft_printf("%s\n",temp->file_name);
+		ft_printf("%o %s\n", temp->file_mode, temp->file_name);
 		temp = temp->next;
 	}
 }
 
-t_ls		*create_list(char *path)
+void		create_list(char *path)
 {
 	t_ls			*head;
-	int				i;
+	t_ls			*tmp;
 
-	i = 0;
-	head = create_elem(NULL, NULL);
-	if ((head = read_dir(path, head)) == NULL)
-		return (NULL);
-	head = head->next;
-	if (head->file_name != NULL)
-		output(head);
 	if (CHECK_BIT(g_flags, 4))
-		recursive_output(head);
-	return (head);
+		return (recursive_output(path));
+	head = create_elem(NULL, NULL);
+	read_dir(path, head);
+	tmp = head->next;
+	if (tmp->file_name != NULL)
+		output(tmp);
+	remove_list(tmp);
+	free(head);
 }
 
 void		ft_ls(char **argv, int argc)
 {
 	int		f;
-	t_ls	*head;
 
 	if (argc > 1)
 	{
@@ -83,11 +77,11 @@ void		ft_ls(char **argv, int argc)
 			return ;
 		}
 		if (f == -1)
-			head = create_list(argv[1]);
+			create_list(argv[1]);
 		if (f == 1 && argc == 2)
-			head = create_list(".");
+			create_list(".");
 		if (argc == 3 && f == 1)
-			head = create_list(argv[2]);
+			create_list(argv[2]);
 	}
 }
 

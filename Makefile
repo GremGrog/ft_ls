@@ -25,7 +25,9 @@ DIR_O = obj
 SRCF = srcs/add_flags.c \
 	   srcs/ft_ls.c \
 	   srcs/lst_functions.c \
-	   srcs/recursive_output.c
+	   srcs/recursive_output.c \
+	   srcs/remove_list.c \
+	   srcs/long_format.c
 
 OBJF = $(addprefix $(DIR_O)/,$(patsubst %.c,%.o,$(SRCF)))
 

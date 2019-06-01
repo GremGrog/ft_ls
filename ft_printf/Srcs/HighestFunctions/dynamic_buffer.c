@@ -30,7 +30,7 @@ void	ft_copy_temp(char *temp_str, char *temp_final)
 {
 	int i;
 
-	i = g_buffer->buff_size;
+	i = g_buffer->buff_size / g_buffer->overflow_counter;
 	ft_memcpy(temp_str, g_buffer->str, i);
 	ft_memcpy(temp_final, g_buffer->final, i);
 	while (i < g_buffer->buff_size)
