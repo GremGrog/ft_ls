@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmasha-h <fmasha-h@student.21-school.ru>   +#+  +:+       +#+        */
+/*   By: fmasha-h <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/27 08:58:33 by fmasha-h          #+#    #+#             */
-/*   Updated: 2019/05/27 17:08:46 by fmasha-h         ###   ########.fr       */
+/*   Created: 2019/06/02 20:24:09 by fmasha-h          #+#    #+#             */
+/*   Updated: 2019/06/02 20:24:11 by fmasha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,20 @@ t_ls				*get_path(t_ls *node, char *path)
 
 unsigned char		get_file_type(struct dirent *p_dir, unsigned char file_type)
 {
+	if (p_dir->d_type == DT_BLK)
+		file_type = 'b';
+	if (p_dir->d_type == DT_CHR)
+		file_type = 'c';
 	if (p_dir->d_type == DT_DIR)
 		file_type = 'd';
+	if (p_dir->d_type == DT_FIFO)
+		file_type = 'p';
 	if (p_dir->d_type == DT_LNK)
 		file_type = 'l';
 	if (p_dir->d_type == DT_REG)
-		file_type = 'f';
+		file_type = '-';
 	if (p_dir->d_type == DT_SOCK)
 		file_type = 's';
-	if (p_dir->d_type == DT_FIFO)
-		file_type = 'p';
 	return (file_type);
 }
 
@@ -72,6 +76,8 @@ t_ls				*create_elem(struct dirent *p_dir, char *path)
 
 	node = (t_ls*)malloc(sizeof(t_ls));
 	node->file_type = 0;
+	node->str_mode = NULL;
+	node->str_time = NULL;
 	if (p_dir)
 	{
 		node->name_length = ft_strlen(p_dir->d_name);
@@ -80,7 +86,7 @@ t_ls				*create_elem(struct dirent *p_dir, char *path)
 		ft_strcpy(node->file_name, p_dir->d_name);
 		node->file_type = get_file_type(p_dir, node->file_type);
 		get_path(node, path);
-		if (CHECK_BIT(g_flags, 3))
+		if (CHECK_BIT(g_flags, 3) || CHECK_BIT(g_flags, 2))
 			lstat_call(node);
 	}
 	else
@@ -91,42 +97,4 @@ t_ls				*create_elem(struct dirent *p_dir, char *path)
 	}
 	node->next = NULL;
 	return (node);
-}
-
-void				add_node_reverse(t_ls *head, t_ls *node)
-{
-	while (head->next != NULL)
-	{
-		if (head->next->file_name != NULL &&
-			ft_strcmp(head->next->file_name, node->file_name) < 0)
-		{
-			node->next = head->next;
-			head->next = node;
-			return ;
-		}
-		head = head->next;
-	}
-	head->next = node;
-	node->next = NULL;
-}
-
-void				add_node_defolt(t_ls *head, t_ls *node)
-{
-	if (CHECK_BIT(g_flags, 1) == 1)
-	{
-		return (add_node_reverse(head, node));
-	}
-	while (head->next != NULL)
-	{
-		if (head->next->file_name != NULL &&
-			ft_strcmp(head->next->file_name, node->file_name) > 0)
-		{
-			node->next = head->next;
-			head->next = node;
-			return ;
-		}
-		head = head->next;
-	}
-	head->next = node;
-	node->next = NULL;
 }

@@ -20,6 +20,10 @@ void		delete_elem(t_ls *head)
 		free(head->path);
 	if (head->full_path)
 		free(head->full_path);
+	if (head->str_mode)
+		free(head->str_mode);
+	if (head->str_time)
+		free(head->str_time);
 	free(head);
 }
 

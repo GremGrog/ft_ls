@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   recursive_output.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmasha-h <fmasha-h@student.21-school.ru>   +#+  +:+       +#+        */
+/*   By: fmasha-h <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/31 13:58:53 by fmasha-h          #+#    #+#             */
-/*   Updated: 2019/05/31 13:58:56 by fmasha-h         ###   ########.fr       */
+/*   Created: 2019/06/02 20:23:59 by fmasha-h          #+#    #+#             */
+/*   Updated: 2019/06/02 20:24:01 by fmasha-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_ls	*recursive_loop(t_ls *temp)
 			}
 			else
 			{
-				ft_printf("FP%s:\n", temp->full_path);
+				ft_printf("%s:\n", temp->full_path);
 				recursive_output(temp->full_path);
 			}
 		}
@@ -45,11 +45,17 @@ void	recursive_output(char *path)
 	t_ls	*head;
 	t_ls	*temp;
 
+	g_total_blocks = 0;
 	head = create_elem(NULL, NULL);
 	read_dir(path, head);
 	temp = head->next;
 	if (temp->file_name != NULL)
-		output(temp);
+	{
+		if (CHECK_BIT(g_flags, 3))
+			long_format_output(temp);
+		else
+			output(temp);
+	}
 	ft_printf("\n");
 	temp = recursive_loop(temp);
 	remove_list(temp);
