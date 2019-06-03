@@ -47,7 +47,11 @@ void	recursive_output(char *path)
 
 	g_total_blocks = 0;
 	head = create_elem(NULL, NULL);
-	read_dir(path, head);
+	if (read_dir(path, head) == -1)
+	{
+		ft_printf("./ft_ls: %s: No such file or directory\n", path);
+		exit(-1);
+	}
 	temp = head->next;
 	if (temp->file_name != NULL)
 	{

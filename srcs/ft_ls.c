@@ -34,10 +34,10 @@ int		read_dir(char *path, t_ls *head)
 	return (1);
 }
 
-void		create_list(char *path)
+void	create_list(char *path)
 {
-	t_ls			*head;
-	t_ls			*tmp;
+	t_ls	*head;
+	t_ls	*tmp;
 
 	if (CHECK_BIT(g_flags, 4))
 		return (recursive_output(path));
@@ -60,51 +60,32 @@ void		create_list(char *path)
 	free(head);
 }
 
-int		check_for_multiply_flags(char **argv)
+void	ft_ls(char **argv, int argc)
 {
 	int		f;
 	int		i;
 
 	i = 1;
-	while (argv[i])
-	{
-		f = add_flags(argv[i]);
-		if (f == 0)
-		{
-			ft_printf("./ft_ls: illegal option -- %c\n", argv[i][1]);
-			ft_printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
-			exit (-1);
-		}
-		i++;
-	}
-	return (f);
-}
-
-void		ft_ls(char **argv, int argc)
-{
-	int		f;
-
-	// f = 0;
+	f = 0;
 	if (argc > 1)
 	{
-		// f = add_flags(argv[1]);
-		f = check_for_multiply_flags(argv);
-		// if (f == 0)
-		// {
-		// 	ft_printf("./ft_ls: illegal option -- %c\n", argv[1][1]);
-		// 	ft_printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
-		// 	return ;
-		// }
+		while (argv[i])
+		{
+			f = add_flags(argv[i]);
+			if (f == -1)
+				break ;
+			i++;
+		}
 		if (f == -1 && argc == 2)
-			create_list(argv[1]);
+			create_list(argv[i]);
 		if (f == 1 && argc == 2)
 			create_list(".");
-		if (argc >= 3 && (f == 0 || f == 1))
-			multiply_args(argv);
+		else
+			multiply_args(&argv[i]);
 	}
 }
 
-int			main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	g_list_size = 0;
 	g_flags = 0;

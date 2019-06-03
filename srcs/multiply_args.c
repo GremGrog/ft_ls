@@ -18,12 +18,11 @@ t_args	*create_arg_node(char **argv)
 	DIR		*ptr;
 
 	node = (t_args*)malloc(sizeof(t_args));
+	ptr = NULL;
 	if (argv)
 	{
 		if (*argv[0] != '-')
 			ptr = opendir(*argv);
-		else
-			return (NULL);
 		if (ptr == NULL)
 		{
 			ft_printf("./ft_ls: %s: No such file or directory\n", *argv);
@@ -76,14 +75,14 @@ void	multiply_args(char **argv)
 	t_args	*head;
 	t_args	*tmp;
 	t_args	*buf;
-	int		i;
 
+	if (*argv == NULL)
+		return (create_list("."));
 	head = create_arg_node(NULL);
-	i = 1;
-	while (argv[i] != '\0')
+	while (*argv != '\0')
 	{
-		sort_args(head, create_arg_node(&argv[i]));
-		i++;
+		sort_args(head, create_arg_node(argv));
+		argv++;
 	}
 	tmp = head->next;
 	buf = head->next;
@@ -96,5 +95,6 @@ void	multiply_args(char **argv)
 		tmp = tmp->next;
 	}
 	delete_args_list(buf);
+	free(tmp);
 	free(head);
 }

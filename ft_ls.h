@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_LS
-# define FT_LS
+#ifndef FT_LS_H
+# define FT_LS_H
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -54,15 +54,15 @@ typedef struct		s_args
 
 short				g_flags;
 /*
-flag 'a' - 0 bit;
-flag 'r' - 1 bit;
-flag 't' - 2 bit;
-flag 'l' - 3 bit;
-flag 'R' - 4 bit;
+**flag 'a' - 0 bit;
+**flag 'r' - 1 bit;
+**flag 't' - 2 bit;
+**flag 'l' - 3 bit;
+**flag 'R' - 4 bit;
 */
 unsigned long		g_list_size;
 int					g_total_blocks;
-t_ls				*create_elem(struct dirent *pDir, char *path);
+t_ls				*create_elem(struct dirent *p_dir, char *path);
 void				add_node_defolt(t_ls *head, t_ls *node);
 int					add_flags(char *argv);
 int					read_dir(char *path, t_ls *head);

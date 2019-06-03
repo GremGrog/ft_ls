@@ -40,18 +40,28 @@ void	print_link(t_ls *temp)
 void	long_format_output(t_ls *node)
 {
 	t_ls			*temp;
+	t_ls			*buf;
 	struct passwd	*pw_d;
 	struct group	*gr_d;
+	int				f;
 
 	if (!node)
 		return ;
 	temp = node;
+	buf = node;
+	f = 0;
 	ft_printf("total %d\n", g_total_blocks);
+	while (buf != NULL)
+	{
+		if (buf->file_size > 999)
+			f = 1;
+		buf = buf->next;
+	}
 	while (temp != NULL)
 	{
 		pw_d = getpwuid(temp->user_id);
 		gr_d = getgrgid(temp->group_id);
-		ft_printf("%s%3d %s%6s%7d %s %s",
+		ft_printf("%s%4d %s%6s%7d %s %s",
 		temp->str_mode, temp->file_links, pw_d->pw_name, gr_d->gr_name,
 		temp->file_size, temp->str_time, temp->file_name);
 		if (temp->file_type == 'l')

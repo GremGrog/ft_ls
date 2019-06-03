@@ -12,13 +12,8 @@
 
 #include "../ft_ls.h"
 
-int		add_flags(char *argv)
+void	add_flags_loop(char *argv, int i)
 {
-	int	i;
-
-	i = 0;
-	if (argv[i] != '-')
-		return (-1);
 	while (argv[i] != '\0')
 	{
 		if (argv[i] == 'a')
@@ -31,10 +26,26 @@ int		add_flags(char *argv)
 			PUT_BIT(g_flags, 3);
 		else if (argv[i] == 'R')
 			PUT_BIT(g_flags, 4);
+		else
+			g_flags = 0;
 		i++;
 	}
+}
+
+int		add_flags(char *argv)
+{
+	int	i;
+
+	i = 0;
+	if (argv[i] != '-')
+		return (-1);
+	add_flags_loop(argv, i);
 	if (g_flags == 0)
-		return (0);
+	{
+		ft_printf("./ft_ls: illegal option -- %c\n", argv[1]);
+		ft_printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
+		exit(-1);
+	}
 	else
 		return (1);
 }
