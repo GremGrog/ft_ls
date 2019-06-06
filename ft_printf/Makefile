@@ -79,7 +79,8 @@ OBJF = $(addprefix $(DIR_O)/,$(SRCF:.c=.o))
 INCLUDE = MainHeader
 
 all: $(NAME)
-
+	@true
+		
 $(NAME): $(DIR_O) $(OBJF)
 	@make -C libft
 	@cp libft/libft.a ./$(NAME)

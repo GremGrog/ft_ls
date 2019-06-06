@@ -12,10 +12,8 @@
 
 #include "../ft_ls.h"
 
-t_ls	*recursive_loop(t_ls *temp)
+void	recursive_loop(t_ls *temp)
 {
-	t_ls	*buf;
-
 	while (temp != NULL)
 	{
 		if (temp->file_type == 'd')
@@ -23,34 +21,38 @@ t_ls	*recursive_loop(t_ls *temp)
 			if ((temp->file_name[0] == '.' && temp->file_name[1] == '.') ||
 				(temp->file_name[0] == '.' && temp->name_length == 1))
 			{
-				buf = temp;
-				temp = temp->next;
-				delete_elem(buf);
+				if (temp->next)
+					temp = temp->next;
 			}
-			else
+			if (temp->file_type == 'd')
 			{
-				ft_printf("%s:\n", temp->full_path);
-				recursive_output(temp->full_path);
+				if (!((temp->file_name[0] == '.' && temp->file_name[1] == '.')
+				|| (temp->file_name[0] == '.' && temp->name_length == 1)))
+				{
+					ft_printf("%s:\n", temp->full_path);
+					recursive_output(temp->full_path);
+				}
 			}
 		}
-		buf = temp;
 		temp = temp->next;
-		delete_elem(buf);
 	}
-	return (temp);
+	remove_list(temp);
 }
 
 void	recursive_output(char *path)
 {
-	t_ls	*head;
-	t_ls	*temp;
+	t_ls		*head;
+	t_ls		*temp;
+	struct stat	w;
 
 	g_total_blocks = 0;
 	head = create_elem(NULL, NULL);
 	if (read_dir(path, head) == -1)
 	{
-		ft_printf("./ft_ls: %s: No such file or directory\n", path);
-		exit(-1);
+		if ((lstat(path, &w) == -1))
+			bust(path);
+		else
+			add_node_defolt(head, create_elem_file(path));
 	}
 	temp = head->next;
 	if (temp->file_name != NULL)
@@ -59,9 +61,9 @@ void	recursive_output(char *path)
 			long_format_output(temp);
 		else
 			output(temp);
+		ft_printf("\n");
 	}
-	ft_printf("\n");
-	temp = recursive_loop(temp);
+	recursive_loop(temp);
 	remove_list(temp);
 	free(head);
 }

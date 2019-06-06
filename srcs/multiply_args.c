@@ -12,89 +12,75 @@
 
 #include "../ft_ls.h"
 
-t_args	*create_arg_node(char **argv)
+int		create_elem_args(char *argv, t_ls *args)
 {
-	t_args	*node;
-	DIR		*ptr;
+	DIR				*ptr;
+	t_ls			*node;
 
-	node = (t_args*)malloc(sizeof(t_args));
-	ptr = NULL;
-	if (argv)
-	{
-		if (*argv[0] != '-')
-			ptr = opendir(*argv);
-		if (ptr == NULL)
-		{
-			ft_printf("./ft_ls: %s: No such file or directory\n", *argv);
-			free(node);
-			return (NULL);
-		}
-		closedir(ptr);
-		node->arg_name = (char*)malloc(sizeof(char) * ft_strlen(*argv) + 1);
-		ft_strcpy(node->arg_name, *argv);
-	}
-	node->next = NULL;
-	return (node);
+	if ((ptr = opendir(argv)) == NULL)
+		return (-1);
+	closedir(ptr);
+	node = (t_ls*)malloc(sizeof(t_ls));
+	node->file_name = (char*)malloc(sizeof(char) * ft_strlen(argv) + 1);
+	ft_strcpy(node->file_name, argv);
+	node->file_type = 'd';
+	add_node_defolt(args, node);
+	return (1);
 }
 
-void	sort_args(t_args *head, t_args *node)
+void	print_multiply_args(t_ls *head)
 {
-	if (!node)
-		return ;
-	while (head->next != NULL)
+	t_ls	*tmp;
+
+	while (head != NULL)
 	{
-		if (head->next->arg_name != NULL &&
-			ft_strcmp(head->next->arg_name, node->arg_name) > 0)
-		{
-			node->next = head->next;
-			head->next = node;
-			return ;
-		}
+		ft_printf("%s:\n", head->file_name);
+		create_list(head->file_name);
+		if (head->next != NULL && head->file_type == 'd')
+			ft_printf("\n");
+		tmp = head;
 		head = head->next;
-	}
-	head->next = node;
-	node->next = NULL;
-}
-
-void	delete_args_list(t_args *buf)
-{
-	t_args *tmp;
-
-	while (buf != NULL)
-	{
-		if (buf->arg_name)
-			free(buf->arg_name);
-		tmp = buf;
-		buf = buf->next;
+		free(tmp->file_name);
 		free(tmp);
 	}
+	free(head);
+}
+
+void	print_multiply_files(t_ls *head)
+{
+	t_ls	*files;
+
+	files = head;
+	output(files);
+	remove_list(files);
+	ft_printf("\n");
 }
 
 void	multiply_args(char **argv)
 {
-	t_args	*head;
-	t_args	*tmp;
-	t_args	*buf;
+	t_ls		*head;
+	t_ls		*buf;
+	struct stat	w;
 
 	if (*argv == NULL)
 		return (create_list("."));
-	head = create_arg_node(NULL);
+	head = create_elem(NULL, NULL);
+	buf = create_elem(NULL, NULL);
 	while (*argv != '\0')
 	{
-		sort_args(head, create_arg_node(argv));
+		if (create_elem_args(*argv, head) == -1)
+		{
+			if ((lstat(*argv, &w) == -1))
+				ft_printf("./ft_ls: %s: No such file or directory\n", *argv);
+			else
+				add_node_defolt(buf, create_elem_file(*argv));
+		}
 		argv++;
 	}
-	tmp = head->next;
-	buf = head->next;
-	while (tmp != NULL)
-	{
-		ft_printf("%s:\n", tmp->arg_name);
-		create_list(tmp->arg_name);
-		if (tmp->next != NULL)
-			ft_printf("\n");
-		tmp = tmp->next;
-	}
-	delete_args_list(buf);
-	free(tmp);
+	if (buf->next)
+		print_multiply_files(buf->next);
+	if (head->next)
+		print_multiply_args(head->next);
+	free(buf);
 	free(head);
 }

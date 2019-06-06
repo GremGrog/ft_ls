@@ -12,6 +12,23 @@
 
 #include "../ft_ls.h"
 
+void	add_node_reverse_mtime(t_ls *head, t_ls *node)
+{
+	while (head->next != NULL)
+	{
+		if (head->next->file_name != NULL &&
+			head->next->mtime >= node->mtime)
+		{
+			node->next = head->next;
+			head->next = node;
+			return ;
+		}
+		head = head->next;
+	}
+	head->next = node;
+	node->next = NULL;
+}
+
 void	add_node_mtime(t_ls *head, t_ls *node)
 {
 	while (head->next != NULL)
@@ -31,6 +48,8 @@ void	add_node_mtime(t_ls *head, t_ls *node)
 
 void	add_node_reverse(t_ls *head, t_ls *node)
 {
+	if (CHECK_BIT(g_flags, 2))
+		return (add_node_reverse_mtime(head, node));
 	while (head->next != NULL)
 	{
 		if (head->next->file_name != NULL &&

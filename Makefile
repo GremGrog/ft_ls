@@ -30,12 +30,12 @@ SRCF = srcs/add_flags.c \
 	   srcs/remove_list.c \
 	   srcs/long_format.c \
 	   srcs/output.c \
-	   srcs/multiply_args.c
-
+	   srcs/multiply_args.c \
+	   srcs/bust.c
+	    
 OBJF = $(addprefix $(DIR_O)/,$(patsubst %.c,%.o,$(SRCF)))
 
 all: $(NAME)
-	@true
 
 $(DIR_O):
 	@mkdir -p obj
@@ -43,10 +43,10 @@ $(DIR_O):
 
 $(NAME): $(DIR_O) $(OBJF)
 	@make -C ft_printf
-	gcc $(FLAGS) $(OBJF) $(PRINTF_LIB) -o $(NAME)
+	@gcc $(FLAGS) $(OBJF) $(PRINTF_LIB) -o $(NAME)
 
 $(DIR_O)/%.o: %.c
-	gcc $(FLAGS) $(LS_HEAD) $(PRINTF_HEAD) -o $@ -c $<
+	@gcc $(FLAGS) $(LS_HEAD) $(PRINTF_HEAD) -o $@ -c $<
 
 clean:
 	@rm -rf $(DIR_O)

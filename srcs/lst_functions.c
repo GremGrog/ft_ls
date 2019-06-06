@@ -98,3 +98,29 @@ t_ls				*create_elem(struct dirent *p_dir, char *path)
 	node->next = NULL;
 	return (node);
 }
+
+t_ls				*create_elem_file(char *path)
+{
+	t_ls	*node;
+	int		i;
+	int		j;
+
+	j = 0;
+	i = 0;
+	node = (t_ls*)malloc(sizeof(t_ls));
+	node->file_type = '-';
+	node->str_mode = NULL;
+	node->str_time = NULL;
+	node->name_length = ft_strlen(path);
+	if (!(node->file_name = malloc(sizeof(char) * node->name_length + 1)))
+		return (NULL);
+	ft_strcpy(node->file_name, path);
+	node->path = malloc(sizeof(char) * node->name_length + 1);
+	ft_strcpy(node->path, node->file_name);
+	node->full_path = malloc(sizeof(char) * node->name_length + 1);
+	ft_strcpy(node->full_path, node->file_name);
+	if (CHECK_BIT(g_flags, 3) || CHECK_BIT(g_flags, 2))
+		lstat_call(node);
+	node->next = NULL;
+	return (node);
+}

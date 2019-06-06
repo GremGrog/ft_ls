@@ -36,8 +36,9 @@ int		read_dir(char *path, t_ls *head)
 
 void	create_list(char *path)
 {
-	t_ls	*head;
-	t_ls	*tmp;
+	t_ls		*head;
+	t_ls		*tmp;
+	struct stat	w;
 
 	if (CHECK_BIT(g_flags, 4))
 		return (recursive_output(path));
@@ -45,44 +46,40 @@ void	create_list(char *path)
 	head = create_elem(NULL, NULL);
 	if (read_dir(path, head) == -1)
 	{
-		ft_printf("./ft_ls: %s: No such file or directory\n", path);
-		exit(-1);
+		if ((lstat(path, &w) == -1))
+			bust(path);
+		else
+			add_node_defolt(head, create_elem_file(path));
 	}
 	tmp = head->next;
 	if (tmp->file_name != NULL)
-	{
-		if (CHECK_BIT(g_flags, 3))
-			long_format_output(tmp);
-		else
-			output(tmp);
-	}
+		output(tmp);
 	remove_list(tmp);
 	free(head);
 }
 
-void	ft_ls(char **argv, int argc)
+void	ft_ls(char **argv)
 {
 	int		f;
 	int		i;
 
 	i = 1;
 	f = 0;
-	if (argc > 1)
+	while (argv[i])
 	{
-		while (argv[i])
-		{
-			f = add_flags(argv[i]);
-			if (f == -1)
-				break ;
-			i++;
-		}
-		if (f == -1 && argc == 2)
-			create_list(argv[i]);
-		if (f == 1 && argc == 2)
-			create_list(".");
-		else
-			multiply_args(&argv[i]);
+		f = add_flags(argv[i]);
+		if (f == -1)
+			break ;
+		i++;
 	}
+	if (f == -1 && argv[i + 1] == '\0')
+	{
+		return (create_list(argv[i]));
+	}
+	else if (f == 1 && argv[i + 1] == '\0')
+		return (create_list("."));
+	else
+		multiply_args(&argv[i]);
 }
 
 int		main(int argc, char **argv)
@@ -91,6 +88,7 @@ int		main(int argc, char **argv)
 	g_flags = 0;
 	if (argc == 1)
 		create_list(".");
-	else
-		ft_ls(argv, argc);
+	else if (argc > 1)
+		ft_ls(argv);
+	return (0);
 }

@@ -46,12 +46,6 @@ typedef struct		s_ls
 	struct s_ls		*next;
 }					t_ls;
 
-typedef struct		s_args
-{
-	char			*arg_name;
-	struct s_args	*next;
-}					t_args;
-
 short				g_flags;
 /*
 **flag 'a' - 0 bit;
@@ -63,6 +57,7 @@ short				g_flags;
 unsigned long		g_list_size;
 int					g_total_blocks;
 t_ls				*create_elem(struct dirent *p_dir, char *path);
+t_ls				*create_elem_file(char *path);
 void				add_node_defolt(t_ls *head, t_ls *node);
 int					add_flags(char *argv);
 int					read_dir(char *path, t_ls *head);
@@ -74,4 +69,5 @@ void				remove_list(t_ls *head);
 void				lstat_call(t_ls *node);
 void				long_format_output(t_ls *node);
 void				multiply_args(char **argv);
+void				bust(char *path);
 #endif
