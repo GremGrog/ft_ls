@@ -12,6 +12,19 @@
 
 #include "../ft_ls.h"
 
+void		set_node_to_null(t_ls *node)
+{
+	node->file_type = 0;
+	node->str_mode = NULL;
+	node->str_time = NULL;
+	node->user_name = NULL;
+	node->group_name = NULL;
+	node->str_time = NULL;
+	node->file_name = NULL;
+	node->full_path = NULL;
+	node->path = NULL;
+}
+
 void		delete_elem(t_ls *head)
 {
 	if (head->file_name)
@@ -24,6 +37,10 @@ void		delete_elem(t_ls *head)
 		free(head->str_mode);
 	if (head->str_time)
 		free(head->str_time);
+	if (head->user_name)
+		free(head->user_name);
+	if (head->group_name)
+		free(head->group_name);
 	free(head);
 }
 

@@ -75,9 +75,7 @@ t_ls				*create_elem(struct dirent *p_dir, char *path)
 	t_ls	*node;
 
 	node = (t_ls*)malloc(sizeof(t_ls));
-	node->file_type = 0;
-	node->str_mode = NULL;
-	node->str_time = NULL;
+	set_node_to_null(node);
 	if (p_dir)
 	{
 		node->name_length = ft_strlen(p_dir->d_name);
@@ -88,12 +86,6 @@ t_ls				*create_elem(struct dirent *p_dir, char *path)
 		get_path(node, path);
 		if (CHECK_BIT(g_flags, 3) || CHECK_BIT(g_flags, 2))
 			lstat_call(node);
-	}
-	else
-	{
-		node->file_name = NULL;
-		node->full_path = NULL;
-		node->path = NULL;
 	}
 	node->next = NULL;
 	return (node);
@@ -108,9 +100,7 @@ t_ls				*create_elem_file(char *path)
 	j = 0;
 	i = 0;
 	node = (t_ls*)malloc(sizeof(t_ls));
-	node->file_type = '-';
-	node->str_mode = NULL;
-	node->str_time = NULL;
+	set_node_to_null(node);
 	node->name_length = ft_strlen(path);
 	if (!(node->file_name = malloc(sizeof(char) * node->name_length + 1)))
 		return (NULL);

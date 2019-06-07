@@ -56,6 +56,18 @@ void	file_mode_to_str(t_ls *node)
 	mode_to_str_loop(i, f, node);
 }
 
+void	copy_year(t_ls *node, int i, int j, char *time)
+{
+	while (i < 11)
+		node->str_time[j++] = time[i++];
+	while (i < 19)
+		i++;
+	while (i < 24)
+		node->str_time[j++] = time[i++];
+	node->str_time[j] = '\0';
+	node->str_time_len = j;
+}
+
 void	get_time(t_ls *node)
 {
 	char	*time;
@@ -68,9 +80,17 @@ void	get_time(t_ls *node)
 	time = ctime(&node->ctime);
 	while (i <= 3)
 		i++;
-	while (i < 16)
-		node->str_time[j++] = time[i++];
-	node->str_time[j] = '\0';
+	if (time[23] == '9')
+	{
+		while (i < 16)
+			node->str_time[j++] = time[i++];
+		node->str_time[j] = '\0';
+		node->str_time_len = j;
+		node->str_time[j] = '\0';
+		node->str_time_len = j;
+	}
+	else
+		copy_year(node, i, j, time);
 }
 
 void	get_file_mode(t_ls *node)
@@ -87,30 +107,4 @@ void	get_file_mode(t_ls *node)
 		node->file_type = 'p';
 	if (S_ISLNK(node->file_mode))
 		node->file_type = 'l';
-}
-
-void	lstat_call(t_ls *node)
-{
-	struct stat		buf;
-
-	if (node->file_name == NULL)
-		return ;
-	lstat(node->full_path, &buf);
-	node->file_mode = buf.st_mode;
-	node->file_links = buf.st_nlink;
-	node->user_id = buf.st_uid;
-	node->group_id = buf.st_gid;
-	node->file_size = buf.st_size;
-	node->file_blocks = buf.st_blocks;
-	node->atime = buf.st_atime;
-	node->mtime = buf.st_mtime;
-	node->ctime = buf.st_ctime;
-	g_total_blocks += buf.st_blocks;
-	if (node->file_type == 0)
-		get_file_mode(node);
-	if (CHECK_BIT(g_flags, 3))
-	{
-		file_mode_to_str(node);
-		get_time(node);
-	}
 }
